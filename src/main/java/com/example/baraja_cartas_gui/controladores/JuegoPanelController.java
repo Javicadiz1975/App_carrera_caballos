@@ -1,4 +1,4 @@
-package com.example.baraja_cartas_gui.modelo.controladores;
+package com.example.baraja_cartas_gui.controladores;
 
 import com.example.baraja_cartas_gui.modelo.Croupier.Croupier;
 import com.example.baraja_cartas_gui.modelo.baraja.Card;
