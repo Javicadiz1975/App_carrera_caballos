@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.baraja_cartas_gui.modelo.controladores.JuegoPanelController">
+    <!-- Título de la aplicación -->
+    <top>
+        <Label text="Carrera de Caballos" BorderPane.alignment="CENTER" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+    </top>
+
+    <!-- Imagen de la carta -->
+    <left>
+        <ImageView fx:id="ImagenCarta" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
+    </left>
+
+    <!-- Pista de carrera en el centro -->
+    <center>
+        <GridPane fx:id="raceTrack" prefHeight="300.0" prefWidth="400.0" BorderPane.alignment="CENTER" hgap="10.0" vgap="10.0">
+            <columnConstraints>
+                <!-- Definimos 10 columnas (una por cada posición en la carrera) -->
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <!-- Definimos 4 filas (una por cada caballo) -->
+                <RowConstraints vgrow="SOMETIMES" minHeight="10.0" prefHeight="50.0" />
+                <RowConstraints vgrow="SOMETIMES" minHeight="10.0" prefHeight="50.0" />
+                <RowConstraints vgrow="SOMETIMES" minHeight="10.0" prefHeight="50.0" />
+                <RowConstraints vgrow="SOMETIMES" minHeight="10.0" prefHeight="50.0" />
+            </rowConstraints>
+        </GridPane>
+    </center>
+
+    <!-- Botón en la parte inferior -->
+    <bottom>
+        <Button text="Iniciar Ronda" onAction="#iniciarRonda" BorderPane.alignment="CENTER" style="-fx-font-size: 14px;" />
+    </bottom>
+</BorderPane>
