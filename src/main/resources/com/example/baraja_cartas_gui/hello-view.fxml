@@ -4,46 +4,73 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.baraja_cartas_gui.controladores.JuegoPanelController">
     <!-- Título de la aplicación -->
     <top>
-        <Label text="Carrera de Caballos" BorderPane.alignment="CENTER" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+        <Label style="-fx-font-size: 20px; -fx-font-weight: bold;" text="Carrera de Caballos" BorderPane.alignment="CENTER" />
     </top>
 
-    <!-- Imagen de la carta -->
+    <!-- Imagen de la carta y descripción -->
     <left>
-        <ImageView fx:id="ImagenCarta" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
+        <VBox alignment="CENTER" spacing="5.0" BorderPane.alignment="CENTER">
+            <ImageView fx:id="ImagenCarta" fitHeight="150.0" fitWidth="169.0" pickOnBounds="true" preserveRatio="true">
+            <VBox.margin>
+               <Insets right="10.0" />
+            </VBox.margin></ImageView>
+            <Label fx:id="descripcionCarta" style="-fx-font-size: 14px;">
+            <padding>
+               <Insets top="5.0" />
+            </padding></Label>
+        </VBox>
     </left>
 
     <!-- Pista de carrera en el centro -->
     <center>
-        <GridPane fx:id="raceTrack" prefHeight="300.0" prefWidth="400.0" BorderPane.alignment="CENTER" hgap="10.0" vgap="10.0">
+        <GridPane fx:id="raceTrack" alignment="CENTER" gridLinesVisible="true" maxHeight="200" maxWidth="550" minHeight="200" minWidth="300.0" style="-fx-border-color: black; -fx-border-width: 2px;" BorderPane.alignment="CENTER">
             <columnConstraints>
-                <!-- Definimos 10 columnas (una por cada posición en la carrera) -->
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
+                <!-- Definimos 10 columnas para las posiciones en la carrera y una adicional para META -->
+                <ColumnConstraints minWidth="10.0" prefWidth="50.0" />
+                <ColumnConstraints minWidth="10.0" prefWidth="50.0" />
+                <ColumnConstraints minWidth="10.0" prefWidth="50.0" />
+                <ColumnConstraints minWidth="10.0" prefWidth="50.0" />
+                <ColumnConstraints minWidth="10.0" prefWidth="50.0" />
+                <ColumnConstraints minWidth="10.0" prefWidth="50.0" />
+                <ColumnConstraints minWidth="10.0" prefWidth="50.0" />
+                <ColumnConstraints minWidth="10.0" prefWidth="50.0" />
+                <ColumnConstraints minWidth="10.0" prefWidth="50.0" />
+                <ColumnConstraints minWidth="10.0" prefWidth="50.0" />
+                <!-- Columna para META -->
+
             </columnConstraints>
             <rowConstraints>
-                <!-- Definimos 4 filas (una por cada caballo) -->
-                <RowConstraints vgrow="SOMETIMES" minHeight="10.0" prefHeight="50.0" />
-                <RowConstraints vgrow="SOMETIMES" minHeight="10.0" prefHeight="50.0" />
-                <RowConstraints vgrow="SOMETIMES" minHeight="10.0" prefHeight="50.0" />
-                <RowConstraints vgrow="SOMETIMES" minHeight="10.0" prefHeight="50.0" />
+                <RowConstraints minHeight="10.0" prefHeight="50.0" />
+                <RowConstraints minHeight="10.0" prefHeight="50.0" />
+                <RowConstraints minHeight="10.0" prefHeight="50.0" />
+                <RowConstraints minHeight="10.0" prefHeight="50.0" />
             </rowConstraints>
+            <!-- Añadir el Label META directamente en la última columna del GridPane -->
+
         </GridPane>
     </center>
-
-    <!-- Botón en la parte inferior -->
-    <bottom>
-        <Button text="Iniciar Ronda" onAction="#iniciarRonda" BorderPane.alignment="CENTER" style="-fx-font-size: 14px;" />
-    </bottom>
+   <right>
+       <VBox alignment="CENTER_LEFT" blendMode="DARKEN" maxHeight="201.0" maxWidth="31.0" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="31.0" style="-fx-background-color: #00FF00; -fx-border-color: black black black transparent; -fx-border-width: 2 2 2 2;" BorderPane.alignment="CENTER">
+         <children>
+            <Label alignment="CENTER" contentDisplay="RIGHT" rotate="90.0" scaleX="2.0" scaleY="2.0" scaleZ="0.0" text="META" textOverrun="CLIP">
+               <rotationAxis>
+                  <Point3D z="2.0" />
+               </rotationAxis>
+               <font>
+                  <Font size="10.0" />
+               </font></Label>
+         </children>
+         <BorderPane.margin>
+            <Insets right="30.0" />
+         </BorderPane.margin>
+         <rotationAxis>
+            <Point3D z="2.0" />
+         </rotationAxis>
+      </VBox>
+   </right>
 </BorderPane>
