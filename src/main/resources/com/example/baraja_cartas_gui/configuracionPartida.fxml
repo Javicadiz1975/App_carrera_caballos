@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.example.baraja_cartas_gui.controladores.ConfigPartidaController">
+    <VBox alignment="CENTER" spacing="20" style="-fx-padding: 50;">
+        <Label text="¡Bienvenido al Juego de Carreras de Caballos!" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+        <Button text="Comenzar Partida" onAction="#iniciarJuego" style="-fx-font-size: 16px;" />
+        <Button text="Ver Estadísticas" onAction="#verEstadisticas" style="-fx-font-size: 16px;" />
+        <Button text="Salir" onAction="#salir" style="-fx-font-size: 16px;" />
+    </VBox>
+</StackPane>

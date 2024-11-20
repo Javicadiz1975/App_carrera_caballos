@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.example.baraja_cartas_gui.controladores.EstadisticasController">
+    <VBox alignment="CENTER" spacing="20" style="-fx-padding: 50;">
+        <Label text="Estadísticas del Juego" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+        <TextArea fx:id="estadisticasArea" editable="false" wrapText="true" prefHeight="200" prefWidth="400" />
+        <Button text="Volver" onAction="#volver" style="-fx-font-size: 16px;" />
+    </VBox>
+</StackPane>
