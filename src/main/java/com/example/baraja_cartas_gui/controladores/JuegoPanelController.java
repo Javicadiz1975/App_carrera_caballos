@@ -23,6 +23,7 @@ import com.example.baraja_cartas_gui.modelo.baraja.Card;
 import com.example.baraja_cartas_gui.modelo.baraja.CardSuit;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
@@ -43,6 +44,11 @@ public class JuegoPanelController {
     int rondaActual = 0;
 
     private List<Jugador> jugadores;
+
+    private static final String RUTA_ARCHIVO_CARTAS = "cartas_sacadas.txt"; // Archivo donde se almacenarán las cartas
+    private static final String RUTA_ARCHIVO_PALOS_GANADORES = "palos_ganadores.txt"; // Archivo para guardar los palos ganadores
+
+    private List<Card> cartasSacadas = new ArrayList<>();
 
 
 
@@ -98,6 +104,12 @@ public class JuegoPanelController {
     private void iniciarRonda() {
         Card cartaSacada = croupier.repartirCarta();
         if (cartaSacada != null) {
+            // Guardar la carta sacada en la lista
+            cartasSacadas.add(cartaSacada);
+
+            // Registrar la carta en el archivo
+            registrarCartaEnArchivo(cartaSacada);
+
             descripcionCarta.setText(cartaSacada.getDescription());
             String archivoCarta = cartaSacada.getDescription().replace(" of ", "_");
             String imagePath = "src/main/resources/images/" + archivoCarta + ".png";
@@ -170,6 +182,8 @@ public class JuegoPanelController {
                 .mapToInt(Jugador::getApuesta)
                 .sum();
 
+        registrarPaloGanadorEnArchivo(ganadorPalo);
+
         // Crear el diálogo de alerta
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("Ganador de la carrera");
@@ -227,6 +241,22 @@ public class JuegoPanelController {
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void registrarCartaEnArchivo(Card carta) {
+        try (FileWriter writer = new FileWriter(RUTA_ARCHIVO_CARTAS, true)) { // `true` habilita el modo append
+            writer.write(carta.getDescription() + System.lineSeparator());
+        } catch (IOException e) {
+            System.err.println("Error al registrar la carta en el archivo: " + e.getMessage());
+        }
+    }
+
+    private void registrarPaloGanadorEnArchivo(CardSuit paloGanador) {
+        try (FileWriter writer = new FileWriter(RUTA_ARCHIVO_PALOS_GANADORES, true)) { // `true` habilita el modo append
+            writer.write(paloGanador.name() + System.lineSeparator());
+        } catch (IOException e) {
+            System.err.println("Error al registrar el palo ganador en el archivo: " + e.getMessage());
         }
     }
 }
