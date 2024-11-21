@@ -102,8 +102,8 @@ public class JuegoPanelController {
             String imageName = "/images/" + palo.name().toUpperCase() + ".png";
             Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imageName)));
             ImageView imageView = new ImageView(image);
-            imageView.setFitHeight(50);
-            imageView.setFitWidth(50);
+            imageView.setFitHeight(70);
+            imageView.setFitWidth(70);
             imageView.setPreserveRatio(true);
             for (RowConstraints row : raceTrack.getRowConstraints()) {
                 row.setPrefHeight(50);
