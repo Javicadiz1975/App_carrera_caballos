@@ -14,9 +14,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -86,6 +86,18 @@ public class JuegoPanelController {
     }
     private void inicializarPista() {
         raceTrack.getChildren().clear();
+
+        for (int row = 0; row < CardSuit.values().length; row++) {
+            // Crear el rectángulo que representará el carril
+            Rectangle lane = new Rectangle(700, 70); // Ancho y alto del carril
+            lane.setFill(row % 2 == 0 ? Color.LIGHTGRAY : Color.WHITESMOKE); // Alternar colores
+            lane.setStroke(Color.BLACK); // Borde negro
+            lane.setStrokeWidth(1); // Grosor del borde
+
+            // Añadir el carril al GridPane
+            raceTrack.add(lane, 0, row, 10, 1); // Columna 0 a 9 (span horizontal)
+        }
+
         for (CardSuit palo : CardSuit.values()) {
             String imageName = "/images/" + palo.name().toUpperCase() + ".png";
             Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imageName)));
@@ -93,9 +105,14 @@ public class JuegoPanelController {
             imageView.setFitHeight(50);
             imageView.setFitWidth(50);
             imageView.setPreserveRatio(true);
+            for (RowConstraints row : raceTrack.getRowConstraints()) {
+                row.setPrefHeight(50);
+            }
 
             paloImageViewMap.put(palo, imageView);
             raceTrack.add(imageView, 0, palo.ordinal());
+
+            //raceTrack.setStyle("-fx-grid-lines-visible: true;");
             posiciones.put(palo, 0);
         }
     }
