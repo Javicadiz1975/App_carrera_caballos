@@ -5,6 +5,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -14,6 +15,10 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -184,46 +189,69 @@ public class JuegoPanelController {
 
         registrarPaloGanadorEnArchivo(ganadorPalo);
 
-        // Crear el diálogo de alerta
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("Ganador de la carrera");
-        alert.setHeaderText("¡Tenemos un ganador!");
-        alert.setContentText("Detalles de la carrera:");
+        alert.setHeaderText(null); // Sin encabezado para un diseño más limpio
+
+        // Crear un contenedor principal
+        VBox contenedorPrincipal = new VBox();
+        contenedorPrincipal.setSpacing(15);
+        contenedorPrincipal.setPadding(new Insets(20));
+
+        // Título destacado
+        Label titulo = new Label("¡Tenemos un ganador!");
+        titulo.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        titulo.setStyle("-fx-text-fill: #2a9d8f;"); // Verde azulado moderno
+        contenedorPrincipal.getChildren().add(titulo);
 
         // Crear un contenedor para la información personalizada
         GridPane contenido = new GridPane();
         contenido.setHgap(10);
         contenido.setVgap(10);
 
-        // Agregar el texto con la información
+        // Agregar los detalles del ganador
         contenido.add(new Label("Nombre del ganador:"), 0, 0);
-        contenido.add(new Label(nombreGanador), 1, 0);
+        Label lblNombreGanador = new Label(nombreGanador);
+        lblNombreGanador.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        lblNombreGanador.setStyle("-fx-text-fill: #264653;"); // Azul oscuro
+        contenido.add(lblNombreGanador, 1, 0);
 
         contenido.add(new Label("Palo ganador:"), 0, 1);
-        contenido.add(new Label(ganadorPalo.name()), 1, 1);
+        Label lblPaloGanador = new Label(ganadorPalo.name());
+        lblPaloGanador.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        lblPaloGanador.setStyle("-fx-text-fill: #e76f51;"); // Rojo tierra
+        contenido.add(lblPaloGanador, 1, 1);
 
-        contenido.add(new Label("Carta ganadora:"), 0, 2);
-        contenido.add(new Label(cartaGanadora.getDescription()), 1, 2);
+        contenido.add(new Label("Bote acumulado:"), 0, 2);
+        Label lblBote = new Label(boteAcumulado + " €");
+        lblBote.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        lblBote.setStyle("-fx-text-fill: #f4a261;"); // Naranja moderno
+        contenido.add(lblBote, 1, 2);
 
-        contenido.add(new Label("Bote acumulado:"), 0, 3);
-        contenido.add(new Label(boteAcumulado + " €"), 1, 3);
+        // Agregar el contenido al contenedor principal
+        contenedorPrincipal.getChildren().add(contenido);
 
-        // Mostrar la imagen de la carta ganadora
-        String imagePath = "src/main/resources/images/" + cartaGanadora.getDescription().replace(" of ", "_") + ".png";
+        // Mostrar la imagen del caballo ganador
+        String imagePath = "src/main/resources/images/" + ganadorPalo.name() + ".png";
         File imageFile = new File(imagePath);
 
         if (imageFile.exists()) {
             ImageView cartaImagen = new ImageView(new Image(imageFile.toURI().toString()));
-            cartaImagen.setFitHeight(100);
-            cartaImagen.setFitWidth(70);
-            contenido.add(new Label("Imagen de la carta:"), 0, 4);
-            contenido.add(cartaImagen, 1, 4);
+            cartaImagen.setFitHeight(150);
+            cartaImagen.setFitWidth(100);
+            cartaImagen.setStyle("-fx-border-color: #264653; -fx-border-width: 2;"); // Borde decorativo
+
+            HBox imagenContenedor = new HBox();
+            imagenContenedor.setSpacing(10);
+            imagenContenedor.getChildren().addAll(new Label("El caballo ganador:"), cartaImagen);
+            contenedorPrincipal.getChildren().add(imagenContenedor);
         }
 
         // Agregar el contenido personalizado al diálogo
-        alert.getDialogPane().setContent(contenido);
+        alert.getDialogPane().setContent(contenedorPrincipal);
         alert.setOnHidden(dialogEvent -> volverABienvenida());
 
+        // Mostrar la alerta
         alert.showAndWait();
     }
 

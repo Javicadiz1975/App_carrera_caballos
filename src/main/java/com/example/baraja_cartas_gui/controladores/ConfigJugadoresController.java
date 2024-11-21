@@ -7,13 +7,17 @@ import com.example.baraja_cartas_gui.modelo.baraja.CardSuit;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -51,34 +55,79 @@ public class ConfigJugadoresController {
         preguntarNumeroJugadores(); // Pregunta cuántos jugadores humanos habrá.
     }
 
-    private void preguntarNumeroJugadores() {
-        TextInputDialog dialog = new TextInputDialog(); // Valor por defecto.
+    public void preguntarNumeroJugadores() {
+        // Crear un nuevo diálogo personalizado
+        Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setTitle("Configuración de Jugadores");
-        dialog.setHeaderText("Número de Jugadores Humanos");
-        dialog.setContentText("Introduce un número entre 1 y 4:");
 
-        Optional<String> result = dialog.showAndWait();
-        if (result.isPresent()) {
+        // Contenedor principal
+        VBox contenido = new VBox();
+        contenido.setSpacing(15);
+        contenido.setPadding(new Insets(20));
+
+        // Título del diálogo
+        Label titulo = new Label("Número de Jugadores Humanos");
+        titulo.setFont(Font.font("Arial", FontWeight.BOLD, 18));
+        titulo.setTextFill(Color.web("#2a9d8f")); // Verde moderno
+        contenido.getChildren().add(titulo);
+
+        // Subtítulo
+        Label subtitulo = new Label("Introduce un número entre 1 y 4:");
+        subtitulo.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
+        subtitulo.setTextFill(Color.web("#264653")); // Azul oscuro
+        contenido.getChildren().add(subtitulo);
+
+        // Campo de entrada
+        TextField input = new TextField();
+        input.setPromptText("1 - 4");
+        input.setStyle("-fx-border-color: #e76f51; -fx-border-radius: 5; -fx-padding: 5;");
+        contenido.getChildren().add(input);
+
+        // Contenedor para los botones
+        HBox botones = new HBox();
+        botones.setSpacing(10);
+        botones.setPadding(new Insets(10, 0, 0, 0));
+        botones.setStyle("-fx-alignment: center-right;");
+
+        // Botón de Aceptar
+        Button aceptar = new Button("Aceptar");
+        aceptar.setStyle("-fx-background-color: #2a9d8f; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 5 10;");
+        aceptar.setOnAction(e -> {
             try {
-                int seleccionados = Integer.parseInt(result.get().trim());
+                int seleccionados = Integer.parseInt(input.getText().trim());
                 if (seleccionados >= 1 && seleccionados <= 4) {
                     numeroJugadoresHumanos = seleccionados;
                     actualizarTitulo();
-                    actualizarBoton(); // Cambiar el texto del botón dinámicamente
+                    actualizarBoton();
+                    dialog.close(); // Cerrar el diálogo
                 } else {
-                    tituloLabel.setText("Error: Número fuera de rango (1-4).");
-                    preguntarNumeroJugadores();
+                    subtitulo.setText("Error: Número fuera de rango (1-4).");
+                    subtitulo.setTextFill(Color.web("#e76f51")); // Rojo para errores
                 }
-            } catch (NumberFormatException e) {
-                tituloLabel.setText("Error: Entrada no válida.");
-                preguntarNumeroJugadores();
+            } catch (NumberFormatException ex) {
+                subtitulo.setText("Error: Entrada no válida.");
+                subtitulo.setTextFill(Color.web("#e76f51")); // Rojo para errores
             }
-        } else {
-            tituloLabel.setText("Error: No seleccionaste el número de jugadores.");
-            preguntarNumeroJugadores();
-        }
-    }
+        });
 
+        // Botón de Cancelar
+        Button cancelar = new Button("Cancelar");
+        cancelar.setStyle("-fx-background-color: #e63946; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 5 10;");
+        cancelar.setOnAction(e -> {
+            subtitulo.setText("Error: No seleccionaste el número de jugadores.");
+            subtitulo.setTextFill(Color.web("#e76f51")); // Rojo para errores
+            dialog.close(); // Cerrar el diálogo
+        });
+
+        botones.getChildren().addAll(cancelar, aceptar);
+        contenido.getChildren().add(botones);
+
+        // Configurar el contenedor principal en una escena
+        Scene scene = new Scene(contenido);
+        dialog.setScene(scene);
+        dialog.showAndWait();
+    }
     private void actualizarTitulo() {
         tituloLabel.setText("Jugador " + jugadorActual + " de " + numeroJugadoresHumanos);
     }
