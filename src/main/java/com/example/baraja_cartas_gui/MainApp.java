@@ -5,20 +5,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
 public class MainApp extends Application {
     @Override
-    public void start(Stage stage) throws IOException {
-        //FXMLLoader fxmlLoader = new FXMLLoader(MainApp.class.getResource("juegoPanel.fxml"));
-        FXMLLoader fxmlLoader = new FXMLLoader(MainApp.class.getResource("configuracionPartida.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 700, 400);
-        stage.setTitle("Get Card");
-        stage.setScene(scene);
-        stage.show();
+    public void start(Stage primaryStage) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/baraja_cartas_gui/bienvenida.fxml"));
+        primaryStage.setScene(new Scene(loader.load()));
+        primaryStage.setTitle("Carrera de Caballos");
+        primaryStage.show();
     }
 
     public static void main(String[] args) {
-        launch();
+        launch(args);
     }
 }

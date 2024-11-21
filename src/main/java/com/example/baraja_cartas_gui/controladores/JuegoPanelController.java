@@ -1,8 +1,12 @@
 package com.example.baraja_cartas_gui.controladores;
 
+import com.example.baraja_cartas_gui.modelo.Jugadores.Jugador;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.fxml.FXML;
@@ -11,6 +15,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import com.example.baraja_cartas_gui.modelo.Croupier.Croupier;
@@ -18,10 +23,8 @@ import com.example.baraja_cartas_gui.modelo.baraja.Card;
 import com.example.baraja_cartas_gui.modelo.baraja.CardSuit;
 
 import java.io.File;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.io.IOException;
+import java.util.*;
 
 public class JuegoPanelController {
     @FXML
@@ -39,12 +42,14 @@ public class JuegoPanelController {
     private Timeline timeline; // Control de la secuencia de juego automática
     int rondaActual = 0;
 
+    private List<Jugador> jugadores;
+
 
 
     private final Map<CardSuit, ImageView> paloImageViewMap = new EnumMap<>(CardSuit.class); // Mapa para las imágenes de cada palo
 
     public JuegoPanelController() {
-        this.croupier = new Croupier();
+        this.croupier = new Croupier(jugadores);
         this.posiciones = new HashMap<>();
         this.meta = 9; // Longitud de la pista
     }
@@ -52,9 +57,22 @@ public class JuegoPanelController {
     @FXML
     private void initialize() {
         inicializarPista();
+
+    }
+    public void iniciarJuegoConJugadores(List<Jugador> jugadores) {
+        if (jugadores == null || jugadores.isEmpty()) {
+            throw new IllegalArgumentException("La lista de jugadores no puede ser nula ni vacía.");
+        }
+        this.jugadores = jugadores;
+
+        // Inicializar posiciones de los caballos
+        for (CardSuit palo : CardSuit.values()) {
+            posiciones.put(palo, 0);
+        }
+
+        // Iniciar las rondas automáticas solo después de configurar los jugadores
         iniciarAutoRonda();
     }
-
     private void inicializarPista() {
         raceTrack.getChildren().clear();
         for (CardSuit palo : CardSuit.values()) {
@@ -95,10 +113,10 @@ public class JuegoPanelController {
             rondaActual++;
 
             // Verificar ganador después de mover el caballo
-            CardSuit ganador = verificarGanador();
-            if (ganador != null) {
-                Platform.runLater(() -> mostrarAlertaGanador(ganador));
-                timeline.stop();  // Detener el juego automáticamente después de un ganador
+            CardSuit ganadorPalo = verificarGanador();
+            if (ganadorPalo != null) {
+                Platform.runLater(() -> mostrarAlertaGanador(ganadorPalo, cartaSacada));
+                timeline.stop(); // Detener el juego automáticamente después de un ganador
             }
         }
     }
@@ -139,45 +157,80 @@ public class JuegoPanelController {
         return null;  // Retorna null si no hay ganador aún
     }
 
-    private void mostrarAlertaGanador(CardSuit ganador) {
+    private void mostrarAlertaGanador(CardSuit ganadorPalo, Card cartaGanadora) {
+        // Buscar el nombre del ganador (humano o bot)
+        String nombreGanador = jugadores.stream()
+                .filter(jugador -> jugador.getPaloElegido() == ganadorPalo) // Comparar el palo ganador
+                .map(Jugador::getNombre) // Obtener el nombre del jugador
+                .findFirst()
+                .orElse("Bot " + ganadorPalo.name()); // Si no encuentra, asumimos que es un bot y usamos su palo como referencia
+
+        // Calcular el bote acumulado
+        int boteAcumulado = jugadores.stream()
+                .mapToInt(Jugador::getApuesta)
+                .sum();
+
+        // Crear el diálogo de alerta
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("Ganador de la carrera");
         alert.setHeaderText("¡Tenemos un ganador!");
-        alert.setContentText("El caballo del palo " + ganador.name() + " ha ganado la carrera.");
+        alert.setContentText("Detalles de la carrera:");
+
+        // Crear un contenedor para la información personalizada
+        GridPane contenido = new GridPane();
+        contenido.setHgap(10);
+        contenido.setVgap(10);
+
+        // Agregar el texto con la información
+        contenido.add(new Label("Nombre del ganador:"), 0, 0);
+        contenido.add(new Label(nombreGanador), 1, 0);
+
+        contenido.add(new Label("Palo ganador:"), 0, 1);
+        contenido.add(new Label(ganadorPalo.name()), 1, 1);
+
+        contenido.add(new Label("Carta ganadora:"), 0, 2);
+        contenido.add(new Label(cartaGanadora.getDescription()), 1, 2);
+
+        contenido.add(new Label("Bote acumulado:"), 0, 3);
+        contenido.add(new Label(boteAcumulado + " €"), 1, 3);
+
+        // Mostrar la imagen de la carta ganadora
+        String imagePath = "src/main/resources/images/" + cartaGanadora.getDescription().replace(" of ", "_") + ".png";
+        File imageFile = new File(imagePath);
+
+        if (imageFile.exists()) {
+            ImageView cartaImagen = new ImageView(new Image(imageFile.toURI().toString()));
+            cartaImagen.setFitHeight(100);
+            cartaImagen.setFitWidth(70);
+            contenido.add(new Label("Imagen de la carta:"), 0, 4);
+            contenido.add(cartaImagen, 1, 4);
+        }
+
+        // Agregar el contenido personalizado al diálogo
+        alert.getDialogPane().setContent(contenido);
+        alert.setOnHidden(dialogEvent -> volverABienvenida());
+
         alert.showAndWait();
+    }
+
+
+    private void volverABienvenida() {
+        try {
+            // Cargar la pantalla de bienvenida
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/baraja_cartas_gui/bienvenida.fxml"));
+            Parent root = loader.load();
+
+            // Obtener la ventana actual y cambiar la escena
+            Stage stage = (Stage) raceTrack.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Bienvenida");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 
 
 
 
-//
-//    /**
-//     * Obtiene las posiciones actuales de todos los caballos en la carrera.
-//     *
-//     * @return Un mapa que relaciona cada palo de cartas con su posición actual en la pista.
-//     */
-//    public Map<CardSuit, Integer> obtenerPosiciones() {
-//        return posiciones;
-//    }
-//
-//    /**
-//     * Determina el palo del caballo ganador, si existe.
-//     *
-//     * @return El palo del caballo que ha alcanzado primero la meta, o null si no hay un ganador todavía.
-//     */
-//    public CardSuit obtenerPaloGanador() {
-//        for (Map.Entry<CardSuit, Integer> entry : posiciones.entrySet()) {
-//            if (entry.getValue() >= meta) {
-//                return entry.getKey();
-//            }
-//        }
-//        return null;
-//    }
-//
-//    /**
-//     * Identifica al jugador que ha ganado la carrera basado en el palo ganador.
-//     *
-//     * @param paloGanador El palo del caballo ganador.
-//     * @return El jugador que ha ganado, o null si no se ha determinado un ganador.
-//     */

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.example.baraja_cartas_gui.controladores.BienvenidaController">
+    <children>
+        <!-- Imagen de fondo -->
+        <ImageView fitWidth="800" fitHeight="600">
+            <image>
+                <Image url="/bienvenida.PNG"/>
+
+            </image>
+        </ImageView>
+
+        <!-- Contenido principal -->
+        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 20;">
+            <Label text="Bienvenido a la Carrera de Caballos" style="-fx-font-size: 28px; -fx-text-fill: white; -fx-font-weight: bold;" />
+            <Button text="Iniciar Partida" onAction="#iniciarPartida" prefWidth="200" style="-fx-background-color: #ff5722; -fx-text-fill: white; -fx-font-size: 16px; -fx-border-radius: 10; -fx-background-radius: 10;" />
+            <Button text="Estadísticas" onAction="#verEstadisticas" prefWidth="200" style="-fx-background-color: #2196f3; -fx-text-fill: white; -fx-font-size: 16px; -fx-border-radius: 10; -fx-background-radius: 10;" />
+            <Button text="Salir" onAction="#salir" prefWidth="200" style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 16px; -fx-border-radius: 10; -fx-background-radius: 10;" />
+        </VBox>
+    </children>
+</StackPane>

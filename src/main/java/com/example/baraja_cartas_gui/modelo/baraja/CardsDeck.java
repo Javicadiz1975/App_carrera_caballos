@@ -4,99 +4,71 @@ import java.util.ArrayList;
 
 public class CardsDeck {
     private ArrayList<Card> cardsDeck = new ArrayList<>();
-    private int [] num = {1, 2, 3, 4, 5, 6, 7};
+    private int[] num = {1, 2, 3, 4, 5, 6, 7};
     private CardSuit[] cardSuits = {CardSuit.GOLD, CardSuit.CLUBS, CardSuit.CUPS, CardSuit.SWORDS};
 
     private CardFace[] cardFaces = {CardFace.JACK, CardFace.KNIGHT, CardFace.KING};
-    private Card card;
-    private ArrayList<Integer> numCartes ;
+    private ArrayList<Integer> numCartes;
 
     /**
-     * Method to create the cards deck every time you want to play
-     * Create Cards from two vectors (number and suit) and add them to the deck ArrayList
+     * Constructor que crea un nuevo mazo de cartas con 40 cartas.
      */
-    public CardsDeck () {
+    public CardsDeck() {
+        initializeDeck(); // Llama a la inicialización al crear la instancia
+    }
+
+    /**
+     * Inicializa la baraja con las 40 cartas y resetea las listas de control.
+     */
+    private void initializeDeck() {
+        cardsDeck.clear(); // Limpia el mazo previo
+        numCartes = new ArrayList<>(); // Reinicia el registro de cartas repartidas
+
+        // Generar cartas numeradas
         for (int i = 0; i < num.length; i++) {
             for (int j = 0; j < cardSuits.length; j++) {
-                card = new NumeredCard(num[i], cardSuits[j]);
-                cardsDeck.add(card);
-            }
-        }
-        for (CardFace face : cardFaces){
-            for (int j = 0; j < cardSuits.length; j++) {
-                card = new FacedCard(face, cardSuits[j]);
-                cardsDeck.add(card);
+                cardsDeck.add(new NumeredCard(num[i], cardSuits[j]));
             }
         }
 
-        numCartes = new ArrayList<>();
-         // display deck
-        /*for (Card i: cardsDeck){
-            System.out.println(i);
-        }*/
-
-    }
-
-    /**
-     * Metode per repartir un nova carta aleatoria a la ma
-     * @return --> Carta donada
-     */
-    public Card getCardFromDeck(){
-        Card cartadonada;
-        int numcarta = comprovarNumCartes();
-
-        cartadonada = cardsDeck.get(numcarta) ;
-        return cartadonada;
-    }
-
-    /**
-     * Helper method that returns a random card from Deck that has not been given before
-     * @return --> Card not given before
-     */
-    private int comprovarNumCartes (){
-        boolean trobada ;
-        int numcarta;
-        do{
-            trobada = false;
-            numcarta = (int) (Math.random() * 40 + 1);
-            if (numCartes.isEmpty()){
-                trobada = false;
-            }else {
-                for (Integer x : numCartes) {
-                    if (numcarta == x) {
-                        //System.out.println("carta"+x+" cartaRandom"+numcarta);
-                        trobada = true;
-                    }
-                }
+        // Generar cartas con caras
+        for (CardFace face : cardFaces) {
+            for (CardSuit suit : cardSuits) {
+                cardsDeck.add(new FacedCard(face, suit));
             }
-            //System.out.println(numcarta);
-        }while(trobada);
-        numCartes.add(numcarta-1);
-        return numcarta-1;
+        }
+
+        // Validar que el tamaño sea exactamente 40
+        if (cardsDeck.size() != 40) {
+            throw new IllegalStateException("El mazo debe contener exactamente 40 cartas. Tamaño actual: " + cardsDeck.size());
+        }
     }
 
-    private int comprobarNumCartes() {
-        boolean trobada;
+    /**
+     * Obtiene una carta aleatoria del mazo.
+     *
+     * @return La carta repartida.
+     */
+    public Card getCardFromDeck() {
+        if (!quedanCartas()) {
+            throw new IllegalStateException("No quedan cartas en el mazo para repartir.");
+        }
+
         int numcarta;
         do {
-            trobada = false;
-            numcarta = (int) (Math.random() * 48 + 1);
-            if (numCartes.isEmpty()) {
-                trobada = false;
-            } else {
-                for (Integer x : numCartes) {
-                    if (numcarta == x) {
-                        //System.out.println("carta"+x+" cartaRandom"+numcarta);
-                        trobada = true;
-                    }
-                }
-            }
-            //System.out.println(numcarta);
-        } while (trobada);
-        numCartes.add(numcarta - 1);
-        return numcarta - 1;
+            numcarta = (int) (Math.random() * cardsDeck.size());
+        } while (numCartes.contains(numcarta));
+
+        numCartes.add(numcarta); // Marca la carta como repartida
+        return cardsDeck.get(numcarta);
     }
+
+    /**
+     * Verifica si quedan cartas disponibles en el mazo.
+     *
+     * @return true si quedan cartas, false en caso contrario.
+     */
     public boolean quedanCartas() {
-        return numCartes.size() < cardsDeck.size(); // Si las cartas repartidas son menos que el total
+        return numCartes.size() < cardsDeck.size();
     }
 }

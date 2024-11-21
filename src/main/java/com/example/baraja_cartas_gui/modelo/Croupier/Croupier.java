@@ -1,8 +1,11 @@
 package com.example.baraja_cartas_gui.modelo.Croupier;
 
 
+import com.example.baraja_cartas_gui.modelo.Jugadores.Jugador;
 import com.example.baraja_cartas_gui.modelo.baraja.Card;
 import com.example.baraja_cartas_gui.modelo.baraja.CardsDeck;
+
+import java.util.List;
 
 /**
  * Clase Croupier que maneja el mazo de cartas y distribuye cartas a los jugadores durante el juego.
@@ -13,7 +16,7 @@ public class Croupier {
     /**
      * Constructor que inicializa el croupier con un mazo de cartas nuevo.
      */
-    public Croupier() {
+    public Croupier(List<Jugador> jugadores) {
         cardsDeck = new CardsDeck(); // Crea un nuevo mazo de cartas
     }
 
