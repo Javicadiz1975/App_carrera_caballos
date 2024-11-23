@@ -7,7 +7,7 @@
 <VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.example.baraja_cartas_gui.controladores.EstadisticasController"
       spacing="20" alignment="CENTER"
-      style="-fx-padding: 30; -fx-background-color: #f4f4f9; -fx-border-color: #264653; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10;">
+      style="-fx-padding: 30; -fx-background-color: #f4f4f9; -fx-background-radius: 10;">
 
     <!-- Título principal -->
     <Label text="Estadísticas de Palos Ganadores"

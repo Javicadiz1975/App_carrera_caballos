@@ -6,15 +6,12 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Button?>
+
 <StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
            fx:controller="com.example.baraja_cartas_gui.controladores.BienvenidaController">
     <children>
         <!-- Imagen de fondo -->
-        <ImageView fitWidth="800" fitHeight="600">
-            <image>
-
-
-            </image>
+        <ImageView fx:id="fondoImageView" fitWidth="800" fitHeight="600" preserveRatio="true">
         </ImageView>
 
         <!-- Contenido principal -->

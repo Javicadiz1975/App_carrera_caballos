@@ -86,8 +86,8 @@ public class EstadisticasController {
             // Cargar la imagen del palo
             String imagePath = "/images/" + palo.name().toLowerCase() + ".png";
             ImageView imageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
-            imageView.setFitHeight(50);
-            imageView.setFitWidth(50);
+            imageView.setFitHeight(70);
+            imageView.setFitWidth(70);
             imageView.setPreserveRatio(true);
 
             // Crear una etiqueta con el número de victorias
