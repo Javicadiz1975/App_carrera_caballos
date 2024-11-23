@@ -11,6 +11,8 @@ import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -21,10 +23,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.net.URL;
+import java.util.*;
 
 public class ConfigJugadoresController {
 
@@ -48,11 +48,25 @@ public class ConfigJugadoresController {
 
     private final List<Jugador> jugadores = new ArrayList<>();
     private final List<CardSuit> palosElegidos = new ArrayList<>();
+    @FXML
+    private ImageView ImagenCarta; // Imagen del croupier
 
     @FXML
     public void initialize() {
+        // Cargar la imagen del croupier para la pantalla de configuración
+        String croupierImagePath = "/images/croupier_circular.png";
+        URL croupierImageUrl = getClass().getResource(croupierImagePath);
+        if (croupierImageUrl != null) {
+            ImagenCarta.setImage(new Image(croupierImageUrl.toExternalForm()));
+        } else {
+            System.err.println("Error: No se encontró la imagen en la ruta: " + croupierImagePath);
+        }
+
+        // Inicializar el choice box
         paloChoiceBox.getItems().addAll("GOLD", "CUPS", "SWORDS", "CLUBS");
-        preguntarNumeroJugadores(); // Pregunta cuántos jugadores humanos habrá.
+
+        // Preguntar número de jugadores
+        preguntarNumeroJugadores();
     }
 
     public void preguntarNumeroJugadores() {
@@ -65,6 +79,19 @@ public class ConfigJugadoresController {
         VBox contenido = new VBox();
         contenido.setSpacing(15);
         contenido.setPadding(new Insets(20));
+
+        // Cargar la imagen específica para este diálogo
+        String imagePath = "/images/bienvenida.PNG"; // Imagen para "Número de Jugadores"
+        URL imageUrl = getClass().getResource(imagePath);
+        if (imageUrl == null) {
+            System.err.println("Error: No se encontró la imagen en la ruta: " + imagePath);
+            return; // Salir si no se encuentra la imagen
+        }
+        ImageView imageViewNumeroJugadores = new ImageView(new Image(imageUrl.toExternalForm()));
+        imageViewNumeroJugadores.setFitHeight(200);
+        imageViewNumeroJugadores.setFitWidth(400);
+        imageViewNumeroJugadores.setPreserveRatio(true);
+        contenido.getChildren().add(imageViewNumeroJugadores);
 
         // Título del diálogo
         Label titulo = new Label("Número de Jugadores Humanos");

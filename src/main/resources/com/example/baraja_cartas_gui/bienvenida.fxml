@@ -12,7 +12,7 @@
         <!-- Imagen de fondo -->
         <ImageView fitWidth="800" fitHeight="600">
             <image>
-                <Image url="/bienvenida.PNG"/>
+
 
             </image>
         </ImageView>
