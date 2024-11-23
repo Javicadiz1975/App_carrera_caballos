@@ -127,7 +127,7 @@ public class JuegoPanelController {
         salidaLabel.setMaxWidth(Double.MAX_VALUE);
         raceTrack.add(salidaLabel, 0, 0, 1, CardSuit.values().length); // Columna 0, ocupa todas las filas
 
-        Label llegadaLabel = new Label("Llegada");
+        Label llegadaLabel = new Label("Meta");
         llegadaLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white; -fx-background-color: #4CAF50; " +
                 "-fx-padding: 10; -fx-border-radius: 10; -fx-background-radius: 10;");
         llegadaLabel.setAlignment(Pos.CENTER);
