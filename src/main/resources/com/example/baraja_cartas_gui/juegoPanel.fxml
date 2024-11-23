@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
@@ -21,12 +20,12 @@
 
     <!-- Pista de carrera en el centro -->
     <center>
-        <GridPane fx:id="raceTrack" alignment="CENTER" cacheShape="false" centerShape="false" scaleShape="false" style="-fx-padding: 10;" BorderPane.alignment="CENTER">
+        <GridPane fx:id="raceTrack" alignment="CENTER" style="-fx-padding: 10; " BorderPane.alignment="CENTER">
             <columnConstraints>
-                <!-- Definimos columnas para las posiciones de la carrera -->
+                <!-- Primera columna (Salida) -->
                 <ColumnConstraints halignment="CENTER" minWidth="50.0" prefWidth="50.0" />
-                <ColumnConstraints halignment="CENTER" minWidth="50.0" prefWidth="50.0" />
-                <ColumnConstraints halignment="CENTER" minWidth="50.0" prefWidth="50.0" />
+
+                <!-- Columnas intermedias -->
                 <ColumnConstraints halignment="CENTER" minWidth="50.0" prefWidth="50.0" />
                 <ColumnConstraints halignment="CENTER" minWidth="50.0" prefWidth="50.0" />
                 <ColumnConstraints halignment="CENTER" minWidth="50.0" prefWidth="50.0" />
@@ -35,25 +34,27 @@
                 <ColumnConstraints halignment="CENTER" minWidth="50.0" prefWidth="50.0" />
                 <ColumnConstraints halignment="CENTER" minWidth="50.0" prefWidth="50.0" />
 
+                <!-- Última columna (Llegada) -->
+                <ColumnConstraints halignment="CENTER" minWidth="50.0" prefWidth="50.0" />
             </columnConstraints>
+
             <rowConstraints>
                 <RowConstraints maxHeight="85" minHeight="85" valignment="CENTER" />
                 <RowConstraints maxHeight="85" minHeight="85" valignment="CENTER" />
                 <RowConstraints maxHeight="85" minHeight="85" valignment="CENTER" />
                 <RowConstraints maxHeight="85" minHeight="85" valignment="CENTER" />
             </rowConstraints>
-         <opaqueInsets>
-            <Insets left="80.0" />
-         </opaqueInsets>
-            <!-- Ejemplo de carriles -->
 
+            <!-- Etiqueta "Salida" en la primera columna -->
+            <Label alignment="CENTER" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: black;" text="Salida" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="4" />
+
+            <!-- Etiqueta "Llegada" en la última columna -->
+            <Label alignment="CENTER" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: black;" text="Llegada" GridPane.columnIndex="8" GridPane.rowIndex="0" GridPane.rowSpan="4" />
         </GridPane>
     </center>
 
     <!-- Meta lateral derecha -->
     <right>
-        <VBox alignment="CENTER" prefHeight="360.0" prefWidth="141.0" spacing="5.0" style="-fx-background-color: #264653; -fx-padding: 10;" BorderPane.alignment="CENTER">
-            <Label style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: white; -fx-rotate: 90;" text="META" />
-        </VBox>
+
     </right>
 </BorderPane>

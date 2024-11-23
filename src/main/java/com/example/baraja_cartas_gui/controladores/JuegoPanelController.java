@@ -6,6 +6,7 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -62,7 +63,7 @@ public class JuegoPanelController {
     public JuegoPanelController() {
         this.croupier = new Croupier(jugadores);
         this.posiciones = new HashMap<>();
-        this.meta = 9; // Longitud de la pista
+        this.meta = 8; // Longitud de la pista
     }
 
     @FXML
@@ -78,42 +79,50 @@ public class JuegoPanelController {
 
         // Inicializar posiciones de los caballos
         for (CardSuit palo : CardSuit.values()) {
-            posiciones.put(palo, 0);
+            posiciones.put(palo, 1);
         }
 
         // Iniciar las rondas automáticas solo después de configurar los jugadores
         iniciarAutoRonda();
     }
     private void inicializarPista() {
-        raceTrack.getChildren().clear();
+        raceTrack.getChildren().clear(); // Limpia el contenido del GridPane
 
+        // Añadir etiquetas "Salida" y "Llegada"
+        Label salidaLabel = new Label("Salida");
+        salidaLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: black;");
+        salidaLabel.setAlignment(Pos.CENTER);
+        raceTrack.add(salidaLabel, 0, 0, 1, CardSuit.values().length); // Columna 0, ocupa todas las filas
+
+        Label llegadaLabel = new Label("Llegada");
+        llegadaLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: black;");
+        llegadaLabel.setAlignment(Pos.CENTER);
+        raceTrack.add(llegadaLabel, 8, 0, 1, CardSuit.values().length); // Columna 8, ocupa todas las filas
+
+        // Añadir carriles y caballos
         for (int row = 0; row < CardSuit.values().length; row++) {
-            // Crear el rectángulo que representará el carril
-            Rectangle lane = new Rectangle(700, 70); // Ancho y alto del carril
+            // Crear carriles
+            Rectangle lane = new Rectangle(500, 70); // Ancho y alto del carril
             lane.setFill(row % 2 == 0 ? Color.LIGHTGRAY : Color.WHITESMOKE); // Alternar colores
             lane.setStroke(Color.BLACK); // Borde negro
             lane.setStrokeWidth(1); // Grosor del borde
 
             // Añadir el carril al GridPane
-            raceTrack.add(lane, 0, row, 10, 1); // Columna 0 a 9 (span horizontal)
-        }
+            raceTrack.add(lane, 1, row, 7, 1); // Carril abarca columnas de 1 a 7
 
-        for (CardSuit palo : CardSuit.values()) {
-            String imageName = "/images/" + palo.name().toUpperCase() + ".png";
+            // Añadir imagen del caballo
+            String imageName = "/images/" + CardSuit.values()[row].name().toUpperCase() + ".png";
             Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imageName)));
             ImageView imageView = new ImageView(image);
             imageView.setFitHeight(70);
             imageView.setFitWidth(70);
             imageView.setPreserveRatio(true);
-            for (RowConstraints row : raceTrack.getRowConstraints()) {
-                row.setPrefHeight(50);
-            }
 
-            paloImageViewMap.put(palo, imageView);
-            raceTrack.add(imageView, 0, palo.ordinal());
+            paloImageViewMap.put(CardSuit.values()[row], imageView);
+            raceTrack.add(imageView, 1, row); // Inicialmente en la columna 1
 
-            //raceTrack.setStyle("-fx-grid-lines-visible: true;");
-            posiciones.put(palo, 0);
+            // Guardar posición inicial del caballo
+            posiciones.put(CardSuit.values()[row], 1);
         }
     }
 
@@ -157,7 +166,7 @@ public class JuegoPanelController {
 
     private void avanzarCaballo(CardSuit palo) {
         int posicionActual = posiciones.get(palo);
-        if (posicionActual < raceTrack.getColumnConstraints().size() - 1) { // Asegura no sobrepasar el número de columnas
+        if (posicionActual < meta) { // Asegura no sobrepasar la meta (8)
             posiciones.put(palo, posicionActual + 1);
             actualizarCaballo(palo);
         }
@@ -165,7 +174,7 @@ public class JuegoPanelController {
 
     private void retrocederCaballo(CardSuit palo) {
         int posicionActual = posiciones.get(palo);
-        if (posicionActual > 0) {
+        if (posicionActual > 1) { // Asegura no retroceder antes de la columna 1
             posiciones.put(palo, posicionActual - 1);
             actualizarCaballo(palo);
         }
@@ -184,11 +193,11 @@ public class JuegoPanelController {
     public CardSuit verificarGanador() {
         for (CardSuit palo : CardSuit.values()) {
             int posicion = posiciones.get(palo);
-            if (posicion >= meta) {
-                return palo;  // Retorna el palo del caballo que ganó
+            if (posicion == meta) { // Verifica si la posición es igual a la meta (8)
+                return palo; // Retorna el palo del caballo que ganó
             }
         }
-        return null;  // Retorna null si no hay ganador aún
+        return null; // Retorna null si no hay ganador aún
     }
 
     private void mostrarAlertaGanador(CardSuit ganadorPalo, Card cartaGanadora) {
