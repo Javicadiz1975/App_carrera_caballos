@@ -5,8 +5,10 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -17,7 +19,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -54,6 +58,12 @@ public class JuegoPanelController {
     private static final String RUTA_ARCHIVO_CARTAS = "cartas_sacadas.txt"; // Archivo donde se almacenarán las cartas
     private static final String RUTA_ARCHIVO_PALOS_GANADORES = "palos_ganadores.txt"; // Archivo para guardar los palos ganadores
 
+    @FXML
+    private ImageView croupierImageView;
+
+    @FXML
+    private Label movementLabel;
+
     private List<Card> cartasSacadas = new ArrayList<>();
 
 
@@ -63,7 +73,7 @@ public class JuegoPanelController {
     public JuegoPanelController() {
         this.croupier = new Croupier(jugadores);
         this.posiciones = new HashMap<>();
-        this.meta = 8; // Longitud de la pista
+        this.meta = 7; // Longitud de la pista
     }
 
     @FXML
@@ -88,35 +98,63 @@ public class JuegoPanelController {
     private void inicializarPista() {
         raceTrack.getChildren().clear(); // Limpia el contenido del GridPane
 
-        // Añadir etiquetas "Salida" y "Llegada"
+        // Definir el tamaño de las columnas y las filas
+        raceTrack.getColumnConstraints().clear();
+        raceTrack.getRowConstraints().clear();
+
+        // Configurar columnas
+        for (int i = 0; i < 9; i++) { // Total de columnas (0 a 8)
+            ColumnConstraints column = new ColumnConstraints();
+            column.setPrefWidth(80); // Tamaño más amplio para un diseño espacioso
+            column.setHalignment(HPos.CENTER); // Alinear contenido al centro
+            raceTrack.getColumnConstraints().add(column);
+        }
+
+        // Configurar filas
+        for (int i = 0; i < CardSuit.values().length; i++) { // Total de filas según los palos
+            RowConstraints row = new RowConstraints();
+            row.setPrefHeight(80); // Tamaño más alto para un diseño limpio
+            row.setValignment(VPos.CENTER); // Alinear contenido al centro
+            raceTrack.getRowConstraints().add(row);
+        }
+
+        // Etiquetas de "Salida" y "Llegada" con un diseño moderno
         Label salidaLabel = new Label("Salida");
-        salidaLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: black;");
+        salidaLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white; -fx-background-color: #FF6F61; " +
+                "-fx-padding: 10; -fx-border-radius: 10; -fx-background-radius: 10;");
         salidaLabel.setAlignment(Pos.CENTER);
+        salidaLabel.setMaxHeight(Double.MAX_VALUE); // Ocupa toda la fila
+        salidaLabel.setMaxWidth(Double.MAX_VALUE);
         raceTrack.add(salidaLabel, 0, 0, 1, CardSuit.values().length); // Columna 0, ocupa todas las filas
 
         Label llegadaLabel = new Label("Llegada");
-        llegadaLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: black;");
+        llegadaLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white; -fx-background-color: #4CAF50; " +
+                "-fx-padding: 10; -fx-border-radius: 10; -fx-background-radius: 10;");
         llegadaLabel.setAlignment(Pos.CENTER);
+        llegadaLabel.setMaxHeight(Double.MAX_VALUE); // Ocupa toda la fila
+        llegadaLabel.setMaxWidth(Double.MAX_VALUE);
         raceTrack.add(llegadaLabel, 8, 0, 1, CardSuit.values().length); // Columna 8, ocupa todas las filas
 
-        // Añadir carriles y caballos
+        // Añadir carriles y líneas horizontales
         for (int row = 0; row < CardSuit.values().length; row++) {
-            // Crear carriles
-            Rectangle lane = new Rectangle(500, 70); // Ancho y alto del carril
-            lane.setFill(row % 2 == 0 ? Color.LIGHTGRAY : Color.WHITESMOKE); // Alternar colores
-            lane.setStroke(Color.BLACK); // Borde negro
-            lane.setStrokeWidth(1); // Grosor del borde
+            // Crear líneas horizontales para los carriles
+            Line horizontalLine = new Line();
+            horizontalLine.setStartX(0);
+            horizontalLine.setEndX(560); // Ancho de las columnas centrales (7 columnas de 80px)
+            horizontalLine.setStroke(Color.BLACK);
+            horizontalLine.setStrokeWidth(1);
 
-            // Añadir el carril al GridPane
-            raceTrack.add(lane, 1, row, 7, 1); // Carril abarca columnas de 1 a 7
+            // Posicionar la línea horizontal en la fila actual
+            raceTrack.add(horizontalLine, 1, row, 7, 1); // Abarca de la columna 1 a 7
 
-            // Añadir imagen del caballo
+            // Añadir imágenes de los caballos en la posición inicial (columna 1)
             String imageName = "/images/" + CardSuit.values()[row].name().toUpperCase() + ".png";
             Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imageName)));
             ImageView imageView = new ImageView(image);
-            imageView.setFitHeight(70);
-            imageView.setFitWidth(70);
+            imageView.setFitHeight(60); // Tamaño más pequeño para que se vea ordenado
+            imageView.setFitWidth(60);
             imageView.setPreserveRatio(true);
+            imageView.setStyle("-fx-effect: dropshadow(gaussian, #000000, 10, 0.5, 0, 0);"); // Sombra moderna
 
             paloImageViewMap.put(CardSuit.values()[row], imageView);
             raceTrack.add(imageView, 1, row); // Inicialmente en la columna 1
@@ -124,10 +162,19 @@ public class JuegoPanelController {
             // Guardar posición inicial del caballo
             posiciones.put(CardSuit.values()[row], 1);
         }
+
+        // Estilización del GridPane
+        raceTrack.setStyle("-fx-padding: 20; -fx-background-color: #FFFFFF; " +
+                "-fx-border-color: #DADADA; -fx-border-width: 2; -fx-border-radius: 15; " +
+                "-fx-background-radius: 15; -fx-effect: dropshadow(gaussian, #000000, 15, 0.3, 0, 4);");
     }
 
+
+
+
+
     private void iniciarAutoRonda() {
-        timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> iniciarRonda()));
+        timeline = new Timeline(new KeyFrame(Duration.seconds(0.3), event -> iniciarRonda()));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
     }
@@ -148,11 +195,16 @@ public class JuegoPanelController {
 
             // Mover caballo
             CardSuit palo = cartaSacada.getSuit();
+
+            boolean avanzar = true; // Variable para determinar la acción
             if (rondaActual % 4 == 0) {
                 retrocederCaballo(palo);
+                avanzar = false; // Si retrocede, cambiar a false
             } else {
                 avanzarCaballo(palo);
             }
+
+            actualizarBottom(palo, avanzar);
             rondaActual++;
 
             // Verificar ganador después de mover el caballo
@@ -188,6 +240,7 @@ public class JuegoPanelController {
             int nuevaPosicion = posiciones.get(palo);
             raceTrack.add(imageView, nuevaPosicion % raceTrack.getColumnConstraints().size(), palo.ordinal()); // Añadir en la nueva posición, asegurando que la columna exista
         }
+
     }
 
     public CardSuit verificarGanador() {
@@ -312,6 +365,17 @@ public class JuegoPanelController {
         } catch (IOException e) {
             System.err.println("Error al registrar el palo ganador en el archivo: " + e.getMessage());
         }
+    }
+
+    public void actualizarBottom(CardSuit palo, boolean avanzar) {
+        // Actualizar la imagen del croupier
+        String croupierImagePath = "/images/croupier_circular.png"; // Asegúrate de que la ruta sea correcta
+        Image croupierImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(croupierImagePath)));
+        croupierImageView.setImage(croupierImage);
+
+        // Actualizar el texto del Label
+        String accion = avanzar ? "Avanza" : "Retrocede";
+        movementLabel.setText(accion + " una casilla con el palo: " + palo.name());
     }
 }
 

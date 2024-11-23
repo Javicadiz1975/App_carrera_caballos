@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
@@ -15,6 +16,9 @@
         <VBox alignment="CENTER" prefHeight="565.0" prefWidth="126.0" spacing="10.0" style="-fx-padding: 20;" BorderPane.alignment="CENTER">
             <ImageView fx:id="ImagenCarta" fitHeight="200.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow(gaussian, #264653, 10, 0.5, 2, 2);" />
             <Label fx:id="descripcionCarta" style="-fx-font-size: 16px; -fx-text-fill: #264653; -fx-font-weight: bold;" />
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
         </VBox>
     </left>
 
@@ -36,6 +40,8 @@
 
                 <!-- Última columna (Llegada) -->
                 <ColumnConstraints halignment="CENTER" minWidth="50.0" prefWidth="50.0" />
+            <ColumnConstraints />
+
             </columnConstraints>
 
             <rowConstraints>
@@ -49,7 +55,10 @@
             <Label alignment="CENTER" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: black;" text="Salida" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="4" />
 
             <!-- Etiqueta "Llegada" en la última columna -->
-            <Label alignment="CENTER" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: black;" text="Llegada" GridPane.columnIndex="8" GridPane.rowIndex="0" GridPane.rowSpan="4" />
+            <Label alignment="CENTER" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: black;" text="Llegada" GridPane.columnIndex="9" GridPane.rowIndex="0" GridPane.rowSpan="4" />
+         <BorderPane.margin>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </BorderPane.margin>
         </GridPane>
     </center>
 
@@ -57,4 +66,18 @@
     <right>
 
     </right>
+    <bottom>
+        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20" BorderPane.alignment="CENTER">
+            <children>
+                <!-- Imagen del croupier -->
+                <ImageView fx:id="croupierImageView" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin></ImageView>
+
+                <!-- Label para indicar el movimiento -->
+                <Label fx:id="movementLabel" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Esperando acción..." />
+            </children>
+        </HBox>
+    </bottom>
 </BorderPane>
